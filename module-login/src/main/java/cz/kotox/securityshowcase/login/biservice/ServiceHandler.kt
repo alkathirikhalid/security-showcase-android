@@ -44,15 +44,23 @@ object ServiceHandler {
 		fun startForeground(service: Service) {
 			startForeground(service, NotificationCompat.Builder(service))
 		}
+
+		fun updateNotification(service: Service, progress: Int) {
+			updateProgress(service, NotificationCompat.Builder(service), progress)
+		}
 	}
 
 	@TargetApi(26)
 	object O {
 
-		val CHANNEL_ID = getRandomNumber().toString()
+		private val CHANNEL_ID = getRandomNumber().toString()
 
 		fun startForeground(service: Service) {
 			startForeground(service, NotificationCompat.Builder(service, createChannel(service)))
+		}
+
+		fun updateNotification(service: Service, progress: Int) {
+			updateProgress(service, NotificationCompat.Builder(service, createChannel(service)), progress)
 		}
 
 		private fun createChannel(context: Service): String {
@@ -84,7 +92,16 @@ object ServiceHandler {
 		val stopAction = buildStopAction(service, stopIntent)
 		val notification = buildNotification(builder, service, launchUiIntent, stopAction)
 		service.startForeground(ONGOING_NOTIFICATION_ID, notification)
+	}
 
+	private fun updateProgress(service: Service, builder: NotificationCompat.Builder, progress: Int) {
+		val launchUiIntent = getLaunchUiIntent(service)
+		val stopIntent = getStopServiceIntent(service)
+		val stopAction = buildStopAction(service, stopIntent)
+		builder.setProgress(30, progress, false)
+		val notification = buildNotification(builder, service, launchUiIntent, stopAction)
+		val notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+		notificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
 	}
 
 	private fun buildStopAction(context: Service, stopIntent: PendingIntent): NotificationCompat.Action = NotificationCompat.Action.Builder(

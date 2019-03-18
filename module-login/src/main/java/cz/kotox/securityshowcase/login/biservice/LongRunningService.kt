@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.widget.Toast
+import androidx.databinding.ObservableInt
 import cz.kotox.securityshowcase.login.R
 import timber.log.Timber
 import java.util.concurrent.Executors
@@ -34,7 +35,7 @@ class LongRunningService : Service() {
 
 	private var executor: ScheduledExecutorService? = null
 
-	var timeRunningSec: Long = 0
+	var timeRunningSec = ObservableInt(0)
 
 	companion object {
 		/**
@@ -118,7 +119,7 @@ class LongRunningService : Service() {
 		}
 
 		if (executor == null) {
-			timeRunningSec = 0
+			timeRunningSec.set(0)
 
 			if (isPreAndroidO()) {
 				ServiceHandler.PreO.startForeground(this)
@@ -128,7 +129,7 @@ class LongRunningService : Service() {
 
 			executor = Executors.newSingleThreadScheduledExecutor()
 			val runnable = Runnable { recurringTask() }
-			executor?.scheduleWithFixedDelay(runnable, 0, 3, TimeUnit.SECONDS)
+			executor?.scheduleWithFixedDelay(runnable, 0, 2, TimeUnit.SECONDS)
 			Timber.d("commandStart: starting executor")
 		} else {
 			Timber.d("commandStart: do nothing")
@@ -219,24 +220,31 @@ class LongRunningService : Service() {
 
 	/** This method runs in a background thread, not the main thread, in the executor  */
 	private fun recurringTask() {
-		if (isCharging()) {
-			// Reset the countdown timer.
-			timeRunningSec = 0
-		} else {
-			// Run down the countdown timer.
-			timeRunningSec++
+		//if (isCharging()) {
+		// Reset the countdown timer.
+		//timeRunningSec = 0
+		//} else {
+		// Run down the countdown timer.
+		timeRunningSec.set(timeRunningSec.get().inc())
+		Timber.d("time [$timeRunningSec]")
 
-			if (timeRunningSec >= MAX_TIME_SEC) {
+		if (isPreAndroidO()) {
+			ServiceHandler.PreO.updateNotification(this, timeRunningSec.get())
+		} else {
+			ServiceHandler.O.updateNotification(this, timeRunningSec.get())
+		}
+
+		if (timeRunningSec.get() >= 30/*MAX_TIME_SEC*/) {
 //				// Timer has run out.
-				stopJob()
-				Timber.d("recurringTask: commandStop()")
+			stopJob()
+			Timber.d("recurringTask: commandStop()")
 //				}
 
-			} else {
-				// Timer has not run out, do nothing.
-				//d(TAG, "recurringTask: normal");
-			}
+		} else {
+			// Timer has not run out, do nothing.
+			//d(TAG, "recurringTask: normal");
 		}
+		//}
 
 //		mHandler?.post(
 //			Runnable { /*updateTile()*/ })

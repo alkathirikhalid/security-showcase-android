@@ -41,8 +41,9 @@ class LoginFragment : BaseFragmentViewModel<LoginViewModel, FragmentLoginBinding
 		binding.floatingActionButton.setOnClickListener {
 			val isRunning = localService?.toggleService()
 			showSnackbar(binding.root, "service running = [$isRunning]")
-
 		}
+
+
 		return view
 	}
 

@@ -10,6 +10,12 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent">
 
+			<androidx.core.widget.ContentLoadingProgressBar
+				android:id="@+id/progress"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:layout_constraintBottom_toBottomOf="@+id/imageView" />
+
 			<ImageView
 				android:id="@+id/imageView"
 				android:layout_width="0dp"
