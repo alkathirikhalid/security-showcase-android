@@ -122,6 +122,10 @@ object ServiceHandler {
 			.setContentIntent(contentIntent)
 			.addAction(stopAction)
 			.setStyle(NotificationCompat.BigTextStyle())
+//			.setLights(ContextCompat.getColor(
+//				getApplicationContext(), R.color.colorPrimary), 1000, 1000)
+			.setVibrate(longArrayOf(800, 800, 800, 800))
+			.setDefaults(Notification.DEFAULT_SOUND)
 			.build()
 	}
 }
