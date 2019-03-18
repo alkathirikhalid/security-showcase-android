@@ -16,5 +16,12 @@
 			android:windowSoftInputMode="stateAlwaysHidden"
 			android:theme="@style/Theme.LegalZoom.Light.SystemNavBarNoDivider" />
 
+		<service
+			android:name=".biservice.LongRunningService"
+			android:icon="@drawable/ic_adjust_black_24dp"
+			android:label="@string/tile_uninstalled_text"
+			android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+		</service>
+
 	</application>
 </manifest>

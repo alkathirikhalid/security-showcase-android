@@ -1,3 +1,9 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
 	<string name="app_name">Login</string>
+	<string name="tile_uninstalled_text">UninstalPlaceHolder</string>
+	<string name="local_service_started">Started placeholder</string>
+	<string name="local_service_stopped">Stopped placeholder</string>
+	<string name="local_service_connected">Connected placeholder</string>
+	<string name="local_service_disconnected">Disconnected placeholder</string>
+	<string name="local_service_label">Local service label placeholder</string>
 </resources>
