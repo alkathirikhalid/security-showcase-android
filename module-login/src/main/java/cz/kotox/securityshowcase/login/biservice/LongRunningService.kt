@@ -121,9 +121,9 @@ class LongRunningService : Service() {
 			timeRunningSec = 0
 
 			if (isPreAndroidO()) {
-				HandleNotifications.PreO.createNotification(this)
+				ServiceHandler.PreO.startForeground(this)
 			} else {
-				HandleNotifications.O.createNotification(this)
+				ServiceHandler.O.startForeground(this)
 			}
 
 			executor = Executors.newSingleThreadScheduledExecutor()
